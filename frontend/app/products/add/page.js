@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import { Save, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
+
 
 const AddProductPage = () => {
   const router = useRouter();
