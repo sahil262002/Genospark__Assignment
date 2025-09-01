@@ -13,7 +13,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",             
-      "https://your-frontend.vercel.app",  
+      "https://genospark-assignment.vercel.app/",  
     ],
     credentials: true,
   })
