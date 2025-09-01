@@ -22,7 +22,6 @@ const ProductsCMS = () => {
   
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
 
-
   
   const fetchProducts = async () => {
     setLoading(true);
@@ -436,7 +435,8 @@ const LiveProductsPreview = () => {
   const [liveProducts, setLiveProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const API_BASE = 'http://localhost:5000/api';
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
+
 
   const fetchLiveProducts = async () => {
     setLoading(true);
