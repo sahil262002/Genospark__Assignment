@@ -13,7 +13,10 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",             
-      "https://genospark-assignment.vercel.app/",  
+      "https://genospark-assignment.vercel.app/", 
+      "https://genospark-assignment-qcuskpy7n-sahil262002s-projects.vercel.app/",
+      "https://genospark-assignment-git-master-sahil262002s-projects.vercel.app/",
+      "https://genospark-assignment.vercel.app/", 
     ],
     credentials: true,
   })
