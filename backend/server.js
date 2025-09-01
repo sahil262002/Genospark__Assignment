@@ -17,6 +17,7 @@ app.use(
       "https://genospark-assignment-qcuskpy7n-sahil262002s-projects.vercel.app/",
       "https://genospark-assignment-git-master-sahil262002s-projects.vercel.app/",
       "https://genospark-assignment.vercel.app/", 
+      "https://genospark-assignment-1.onrender.com"
     ],
     credentials: true,
   })
