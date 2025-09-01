@@ -1,8 +1,7 @@
--- Products Management Database Schema
--- Drop table if exists (for development)
+
 DROP TABLE IF EXISTS Products;
 
--- Create Products table with all required fields
+
 CREATE TABLE Products (
     product_id      INT AUTO_INCREMENT PRIMARY KEY,
     product_name    VARCHAR(100) NOT NULL,

@@ -1,6 +1,6 @@
-// server.js - Express.js Backend for Products Management
+
 const express = require('express');
-require('dotenv').config();   // <--- ADD THIS
+require('dotenv').config();   
 const mysql = require('mysql2/promise');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -8,12 +8,12 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Database configuration
+
 const dbConfig = {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
@@ -23,15 +23,15 @@ const dbConfig = {
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  ssl: { rejectUnauthorized: true } // <--- Important
+  ssl: { rejectUnauthorized: true } 
 };
 
 
-// Create connection pool
+
 const pool = require("./db.js");
 
 
-// Test database connection
+
 const testConnection = async () => {
   try {
     const connection = await pool.getConnection();
@@ -42,22 +42,19 @@ const testConnection = async () => {
   }
 };
 
-// API Routes
 
-// GET /api/products - Fetch all products (with filters)
 app.get('/api/products', async (req, res) => {
   try {
     const { status, includeDeleted = 'false', live = 'false' } = req.query;
     
     let query = 'SELECT * FROM Products WHERE 1=1';
     const params = [];
-    
-    // Filter for live/published products only
+
     if (live === 'true') {
       query += ' AND status = ? AND is_deleted = FALSE';
       params.push('Published');
     } else {
-      // Admin view - can filter by status and include deleted
+      
       if (status) {
         query += ' AND status = ?';
         params.push(status);
@@ -86,7 +83,7 @@ app.get('/api/products', async (req, res) => {
   }
 });
 
-// GET /api/products/:id - Fetch single product
+
 app.get('/api/products/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -116,7 +113,7 @@ app.get('/api/products/:id', async (req, res) => {
   }
 });
 
-// POST /api/products - Create new product
+
 app.post('/api/products', async (req, res) => {
   try {
     const { product_name, product_desc, status = 'Draft', created_by } = req.body;
@@ -134,7 +131,7 @@ app.post('/api/products', async (req, res) => {
       [product_name, product_desc, status, created_by]
     );
     
-    // Fetch the created product
+    
     const [newProduct] = await pool.execute(
       'SELECT * FROM Products WHERE product_id = ?',
       [result.insertId]
@@ -155,7 +152,7 @@ app.post('/api/products', async (req, res) => {
   }
 });
 
-// PUT /api/products/:id - Update product
+
 app.put('/api/products/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -169,7 +166,7 @@ app.put('/api/products/:id', async (req, res) => {
       });
     }
     
-    // Check if product exists and is not deleted
+
     const [existingProduct] = await pool.execute(
       'SELECT * FROM Products WHERE product_id = ? AND is_deleted = FALSE',
       [id]
@@ -182,7 +179,7 @@ app.put('/api/products/:id', async (req, res) => {
       });
     }
     
-    // Build dynamic update query
+   
     const updateFields = [];
     const params = [];
     
@@ -207,7 +204,7 @@ app.put('/api/products/:id', async (req, res) => {
     
     await pool.execute(query, params);
     
-    // Fetch updated product
+   
     const [updatedProduct] = await pool.execute(
       'SELECT * FROM Products WHERE product_id = ?',
       [id]
@@ -228,7 +225,6 @@ app.put('/api/products/:id', async (req, res) => {
   }
 });
 
-// DELETE /api/products/:id - Soft delete product
 app.delete('/api/products/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -241,7 +237,7 @@ app.delete('/api/products/:id', async (req, res) => {
       });
     }
     
-    // Check if product exists
+
     const [existingProduct] = await pool.execute(
       'SELECT * FROM Products WHERE product_id = ? AND is_deleted = FALSE',
       [id]
@@ -254,7 +250,7 @@ app.delete('/api/products/:id', async (req, res) => {
       });
     }
     
-    // Soft delete
+
     await pool.execute(
       'UPDATE Products SET is_deleted = TRUE, updated_by = ? WHERE product_id = ?',
       [updated_by, id]
@@ -274,7 +270,7 @@ app.delete('/api/products/:id', async (req, res) => {
   }
 });
 
-// POST /api/products/:id/restore - Restore soft deleted product
+
 app.post('/api/products/:id/restore', async (req, res) => {
   try {
     const { id } = req.params;
@@ -313,7 +309,7 @@ app.post('/api/products/:id/restore', async (req, res) => {
   }
 });
 
-// GET /api/products/live - Public endpoint for live website
+
 app.get('/api/products/live', async (req, res) => {
   try {
     const [rows] = await pool.execute(
@@ -336,7 +332,6 @@ app.get('/api/products/live', async (req, res) => {
   }
 });
 
-// Health check endpoint
 app.get('/api/health', async (req, res) => {
   try {
     const [rows] = await pool.execute('SELECT 1 as health_check');
@@ -354,7 +349,7 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// Error handling middleware
+
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
   res.status(500).json({
@@ -364,7 +359,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
+
 app.use(/.*/, (req, res) => {
   res.status(404).json({
     success: false,
@@ -373,7 +368,7 @@ app.use(/.*/, (req, res) => {
 });
 
 
-// Start server
+
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
   await testConnection();
